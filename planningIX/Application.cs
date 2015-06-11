@@ -8,6 +8,7 @@ namespace planningIX
 {
     class Application
     {
+        public string ID;
         private string _name;
         public List<string> currentVersions;
         public string state;

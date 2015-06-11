@@ -114,11 +114,48 @@ namespace planningIX
             resultRTB.Text += Environment.NewLine + Environment.NewLine + "Started Importing Services..." + Environment.NewLine;
             sw.Start();
 
-            AddServices(importedData.applicationList);
+            Application app = createTestApplication();
+            //AddServices(importedData.applicationList);
 
             sw.Stop();
             resultRTB.Text += Environment.NewLine + "Time needed to import to LeanIX: " + sw.Elapsed.Hours.ToString() + "h " +
             sw.Elapsed.Minutes.ToString() + "m " + sw.Elapsed.Seconds.ToString() + "s";
+        }
+
+        private Application createTestApplication()
+        {
+            Application app = new Application();
+            app.name = "TestAppName";
+            app.alias = "TestAlias";
+            app.description = "TestDescription";
+            app.currentVersions.Add("TestAppName 1.0");
+            app.currentVersions.Add("TestAppName 2.0");
+            app.startDate = "11.12.2007 00:00:00";
+            return app;
+        }
+
+        private void AddOneService(Application app)
+        {
+            ApiClient client = ApiClient.GetInstance();
+            client.setBasePath(Constants.LeanIX.BASE_PATH);
+            client.setApiKey(Constants.LeanIX.API_KEY);
+
+            ServicesApi api = new ServicesApi();
+
+            Service service = new Service();
+            service.name = app.name;
+            service.alias = app.alias;
+            service.description = app.descriptionWithVersions;
+            service.release = app.release;
+            service = api.createService(service);
+            app.ID = service.ID;
+
+            ServiceHasLifecycle serviceLifecycle = new ServiceHasLifecycle();
+            serviceLifecycle.factSheetID = app.ID;
+            serviceLifecycle.lifecycleStateID = "";
+            serviceLifecycle.startDate = app.startDate;
+
+
         }
 
         private void AddServices(List<Application> applications)
