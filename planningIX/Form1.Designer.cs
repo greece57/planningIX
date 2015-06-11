@@ -32,6 +32,7 @@
             this.tb_ApplicationsVersions = new System.Windows.Forms.TextBox();
             this.start = new System.Windows.Forms.Button();
             this.resultRTB = new System.Windows.Forms.RichTextBox();
+            this.deleteApplications = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -54,7 +55,7 @@
             // 
             // start
             // 
-            this.start.Location = new System.Drawing.Point(316, 375);
+            this.start.Location = new System.Drawing.Point(229, 375);
             this.start.Name = "start";
             this.start.Size = new System.Drawing.Size(171, 104);
             this.start.TabIndex = 1;
@@ -70,11 +71,22 @@
             this.resultRTB.TabIndex = 2;
             this.resultRTB.Text = "";
             // 
+            // deleteApplications
+            // 
+            this.deleteApplications.Location = new System.Drawing.Point(624, 421);
+            this.deleteApplications.Name = "deleteApplications";
+            this.deleteApplications.Size = new System.Drawing.Size(171, 58);
+            this.deleteApplications.TabIndex = 3;
+            this.deleteApplications.Text = "Delete all Applications";
+            this.deleteApplications.UseVisualStyleBackColor = true;
+            this.deleteApplications.Click += new System.EventHandler(this.deleteApplications_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(807, 507);
+            this.Controls.Add(this.deleteApplications);
             this.Controls.Add(this.resultRTB);
             this.Controls.Add(this.start);
             this.Controls.Add(this.groupBox1);
@@ -92,6 +104,7 @@
         private System.Windows.Forms.TextBox tb_ApplicationsVersions;
         private System.Windows.Forms.Button start;
         private System.Windows.Forms.RichTextBox resultRTB;
+        private System.Windows.Forms.Button deleteApplications;
     }
 }
 
