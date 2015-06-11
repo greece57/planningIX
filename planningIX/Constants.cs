@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace planningIX
 {
-    class WorksheetConsts
+    class Constants
     {
+        public partial class LeanIX
+        {
+            public const string BASE_PATH = "https://app.leanix.net/MRE2TUM/api/v1";
+            public const string API_KEY = "2754f33e5300cf58c9fb2bb0362b4b35";
+        }
+
         public partial class ApplicationsFile
         {
             public const string WORKSHEET_NAME = "Export";

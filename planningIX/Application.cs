@@ -8,7 +8,8 @@ namespace planningIX
 {
     class Application
     {
-        public string name;
+        public string ID;
+        private string _name;
         public List<string> currentVersions;
         public string state;
         public string alias;
@@ -20,12 +21,41 @@ namespace planningIX
         public string itProductCategory;
         public string usage;
         public string standardisation;
-        public string description;
+        private string _description;
 
+        public string description
+        {
+            get
+            {
+                string __description = _description;
+                __description = __description.Replace("<", " ");
+                __description = __description.Replace(">", " ");
+                return __description;
+            }
+            set { _description = value; }
+        }
+        public string name
+        {
+            get
+            {
+                string __name = _name;
+                __name = __name.Replace("<", "");
+                __name = __name.Replace(">", "");
+                return __name;
+            }
+            set { _name = value; }
+        }
         public string responsible {
             get
             {
+                if (String.IsNullOrEmpty(productSpecialist)) return productSpecialist;
+
                 string _responsible = productSpecialist.Replace(" ", ".");
+                _responsible = _responsible.Replace("ä", "ae");
+                _responsible = _responsible.Replace("ö", "oe");
+                _responsible = _responsible.Replace("ü", "ue");
+                _responsible = _responsible.Replace("é", "e");
+                _responsible = _responsible.Normalize();
                 _responsible = String.Concat(_responsible, "@mre.tum");
                 return _responsible;
             }
@@ -42,6 +72,8 @@ namespace planningIX
                         _release = version.Replace(name, "").Trim();
                     }
                 }
+                _release = _release.Replace("<", "");
+                _release = _release.Replace(">", "");
                 return _release;
             }
         }
