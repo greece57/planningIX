@@ -135,7 +135,7 @@ namespace planningIX
                 Service service = new Service();
                 service.name = app.name;
                 service.alias = app.alias;
-                service.description = app.description;
+                service.description = app.descriptionWithVersions;
                 service.release = app.release;
                 service = api.createService(service);
                 if (!(service == null))
