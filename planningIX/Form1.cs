@@ -27,7 +27,7 @@ namespace planningIX
 
         private void start_Click(object sender, EventArgs e)
         {
-            //importApplications();
+            importApplications();
             importData();
         }
 
@@ -115,8 +115,8 @@ namespace planningIX
             sw.Start();
 
             Application app = createTestApplication();
-            AddOneService(app);
-            //AddServices(importedData.applicationList);
+            //AddOneService(app);
+            AddServices(importedData.applicationList);
 
             sw.Stop();
             resultRTB.Text += Environment.NewLine + "Time needed to import to LeanIX: " + sw.Elapsed.Hours.ToString() + "h " +
