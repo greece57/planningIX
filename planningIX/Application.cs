@@ -124,8 +124,8 @@ namespace planningIX
 
         public void addApplicationLifecycleToService(Service service)
         {
-            FactsheetHasLifecycle serviceStartLifecycle = new FactsheetHasLifecycle();
-            FactsheetHasLifecycle serviceEndLifecycle = new FactsheetHasLifecycle();
+            FactSheetHasLifecycle serviceStartLifecycle = new FactSheetHasLifecycle();
+            FactSheetHasLifecycle serviceEndLifecycle = new FactSheetHasLifecycle();
             serviceStartLifecycle.factSheetID = ID;
             serviceStartLifecycle.lifecycleStateID = "3";
             serviceStartLifecycle.startDate = startDateString;
@@ -133,9 +133,9 @@ namespace planningIX
             serviceEndLifecycle.lifecycleStateID = "5";
             serviceEndLifecycle.startDate = endDateString;
 
-            if (service.factSheetHasLifecycle == null) service.factSheetHasLifecycle = new List<FactsheetHasLifecycle>();
-            service.factSheetHasLifecycle.Add(serviceStartLifecycle);
-            service.factSheetHasLifecycle.Add(serviceEndLifecycle);
+            if (service.factSheetHasLifecycles == null) service.factSheetHasLifecycles = new List<FactSheetHasLifecycle>();
+            service.factSheetHasLifecycles.Add(serviceStartLifecycle);
+            service.factSheetHasLifecycles.Add(serviceEndLifecycle);
         }
 
     }

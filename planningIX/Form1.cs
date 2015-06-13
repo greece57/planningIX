@@ -23,6 +23,11 @@ namespace planningIX
         public Form1()
         {
             InitializeComponent();
+
+            ApiClient client = ApiClient.GetInstance();
+            client.setBasePath(Constants.LeanIX.BASE_PATH);
+            client.setApiKey(Constants.LeanIX.API_KEY);
+
         }
 
         private void start_Click(object sender, EventArgs e)
@@ -138,11 +143,9 @@ namespace planningIX
 
         private void AddOneService(Application app)
         {
-            ApiClient client = ApiClient.GetInstance();
-            client.setBasePath(Constants.LeanIX.BASE_PATH);
-            client.setApiKey(Constants.LeanIX.API_KEY);
-
-            ServicesApi api = new ServicesApi();
+            ServicesApi sApi = new ServicesApi();
+            FactSheetApi fsApi = new FactSheetApi();
+            
 
             Service service = new Service();
             service.name = app.name;
@@ -150,24 +153,19 @@ namespace planningIX
             service.description = app.descriptionWithVersions;
             service.release = app.release;
 
-            service = api.createService(service);
+            service = sApi.createService(service);
             app.ID = service.ID;
 
             app.addApplicationLifecycleToService(service);
-            foreach (FactsheetHasLifecycle lifecycle in service.factSheetHasLifecycle)
-            {
-                api.createfactSheetHasLifecycle(service.ID, lifecycle);
-            }
+
+            fsApi.createFactSheetHasLifecycles(service.ID, service);
 
         }
 
         private void AddServices(List<Application> applications)
         {
-            ApiClient client = ApiClient.GetInstance();
-            client.setBasePath(Constants.LeanIX.BASE_PATH);
-            client.setApiKey(Constants.LeanIX.API_KEY);
-
-            ServicesApi api = new ServicesApi();
+            ServicesApi sApi = new ServicesApi();
+            FactSheetApi fsApi = new FactSheetApi();
 
             int index = 1;
             foreach (Application app in applications)
@@ -177,15 +175,12 @@ namespace planningIX
                 service.alias = app.alias;
                 service.description = app.descriptionWithVersions;
                 service.release = app.release;
-                service = api.createService(service);
+                service = sApi.createService(service);
                 app.ID = service.ID;
 
                 // Add Lifecycles
                 app.addApplicationLifecycleToService(service);
-                foreach (FactsheetHasLifecycle lifecycle in service.factSheetHasLifecycle)
-                {
-                    api.createfactSheetHasLifecycle(service.ID, lifecycle);
-                }
+                fsApi.createFactSheetHasLifecycles(service.ID, service);
                 
 
                 if (!(service == null))
