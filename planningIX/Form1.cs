@@ -71,8 +71,8 @@ namespace planningIX
                     app.itServiceCenter = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.itServiceCenter].Value;
                     app.itProductGroup = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.itProductGroup].Value;
                     app.productSpecialist = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.productSpecialist].Value;
-                    app.startDate = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.startDate].Value.ToString();
-                    app.endDate = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.endDate].Value.ToString();
+                    app.startDate = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.startDate].Value;
+                    app.endDate = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.endDate].Value;
                     app.itProductCategory = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.itProductCategory].Value;
                     app.usage = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.usage].Value;
                     app.standardisation = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.standardisation].Value;
@@ -115,7 +115,8 @@ namespace planningIX
             sw.Start();
 
             Application app = createTestApplication();
-            //AddServices(importedData.applicationList);
+            //AddOneService(app);
+            AddServices(importedData.applicationList);
 
             sw.Stop();
             resultRTB.Text += Environment.NewLine + "Time needed to import to LeanIX: " + sw.Elapsed.Hours.ToString() + "h " +
@@ -130,7 +131,8 @@ namespace planningIX
             app.description = "TestDescription";
             app.currentVersions.Add("TestAppName 1.0");
             app.currentVersions.Add("TestAppName 2.0");
-            app.startDate = "11.12.2007 00:00:00";
+            app.startDate = new DateTime(2007,12,11);
+            app.endDate = new DateTime(2010, 1, 1);
             return app;
         }
 
@@ -147,14 +149,15 @@ namespace planningIX
             service.alias = app.alias;
             service.description = app.descriptionWithVersions;
             service.release = app.release;
+
             service = api.createService(service);
             app.ID = service.ID;
 
-            ServiceHasLifecycle serviceLifecycle = new ServiceHasLifecycle();
-            serviceLifecycle.factSheetID = app.ID;
-            serviceLifecycle.lifecycleStateID = "";
-            serviceLifecycle.startDate = app.startDate;
-
+            app.addApplicationLifecycleToService(service);
+            foreach (FactsheetHasLifecycle lifecycle in service.factSheetHasLifecycle)
+            {
+                api.createfactSheetHasLifecycle(service.ID, lifecycle);
+            }
 
         }
 
@@ -175,6 +178,16 @@ namespace planningIX
                 service.description = app.descriptionWithVersions;
                 service.release = app.release;
                 service = api.createService(service);
+                app.ID = service.ID;
+
+                // Add Lifecycles
+                app.addApplicationLifecycleToService(service);
+                foreach (FactsheetHasLifecycle lifecycle in service.factSheetHasLifecycle)
+                {
+                    api.createfactSheetHasLifecycle(service.ID, lifecycle);
+                }
+                
+
                 if (!(service == null))
                 {
                     resultRTB.Text += index.ToString() + ": " + service.name + Environment.NewLine;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using LeanIX.Api.Models;
 
 namespace planningIX
 {
@@ -16,8 +17,8 @@ namespace planningIX
         public string itServiceCenter;
         public string itProductGroup;
         public string productSpecialist;
-        public string startDate;
-        public string endDate;
+        public DateTime startDate;
+        public DateTime endDate;
         public string itProductCategory;
         public string usage;
         public string standardisation;
@@ -96,6 +97,20 @@ namespace planningIX
                 }
             }
         }
+        public string startDateString
+        {
+            get
+            {
+                return startDate.Year.ToString() + "-" + startDate.Month.ToString() + "-" + startDate.Day.ToString();
+            }
+        }
+        public string endDateString
+        {
+            get
+            {
+                return endDate.Year.ToString() + "-" + endDate.Month.ToString() + "-" + endDate.Day.ToString();
+            }
+        }
 
         public Application()
         {
@@ -105,6 +120,22 @@ namespace planningIX
         public override string ToString()
         {
             return ("Name: " + name + " Release: " + release + " Alias: " + alias);
+        }
+
+        public void addApplicationLifecycleToService(Service service)
+        {
+            FactsheetHasLifecycle serviceStartLifecycle = new FactsheetHasLifecycle();
+            FactsheetHasLifecycle serviceEndLifecycle = new FactsheetHasLifecycle();
+            serviceStartLifecycle.factSheetID = ID;
+            serviceStartLifecycle.lifecycleStateID = "3";
+            serviceStartLifecycle.startDate = startDateString;
+            serviceEndLifecycle.factSheetID = ID;
+            serviceEndLifecycle.lifecycleStateID = "5";
+            serviceEndLifecycle.startDate = endDateString;
+
+            if (service.factSheetHasLifecycle == null) service.factSheetHasLifecycle = new List<FactsheetHasLifecycle>();
+            service.factSheetHasLifecycle.Add(serviceStartLifecycle);
+            service.factSheetHasLifecycle.Add(serviceEndLifecycle);
         }
 
     }
