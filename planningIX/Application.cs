@@ -122,6 +122,19 @@ namespace planningIX
             return ("Name: " + name + " Release: " + release + " Alias: " + alias);
         }
 
+        public Service getService()
+        {
+            Service service = new Service();
+            service.name = name;
+            service.alias = alias;
+            service.description = descriptionWithVersions;
+            service.release = release;
+            service.tags.Add(usage);
+            service.tags.Add(standardisation);
+
+            return service;
+        }
+
         public void addApplicationLifecycleToService(Service service)
         {
             FactSheetHasLifecycle serviceStartLifecycle = new FactSheetHasLifecycle();

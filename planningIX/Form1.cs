@@ -138,6 +138,7 @@ namespace planningIX
             app.currentVersions.Add("TestAppName 2.0");
             app.startDate = new DateTime(2007,12,11);
             app.endDate = new DateTime(2010, 1, 1);
+            app.usage = "Local";
             return app;
         }
 
@@ -145,13 +146,9 @@ namespace planningIX
         {
             ServicesApi sApi = new ServicesApi();
             FactSheetApi fsApi = new FactSheetApi();
-            
 
-            Service service = new Service();
-            service.name = app.name;
-            service.alias = app.alias;
-            service.description = app.descriptionWithVersions;
-            service.release = app.release;
+
+            Service service = app.getService();
 
             service = sApi.createService(service);
             app.ID = service.ID;
@@ -170,11 +167,8 @@ namespace planningIX
             int index = 1;
             foreach (Application app in applications)
             {
-                Service service = new Service();
-                service.name = app.name;
-                service.alias = app.alias;
-                service.description = app.descriptionWithVersions;
-                service.release = app.release;
+                Service service = app.getService();
+
                 service = sApi.createService(service);
                 app.ID = service.ID;
 
@@ -195,10 +189,6 @@ namespace planningIX
 
         private void deleteAllServices()
         {
-            ApiClient client = ApiClient.GetInstance();
-            client.setBasePath(Constants.LeanIX.BASE_PATH);
-            client.setApiKey(Constants.LeanIX.API_KEY);
-
             ServicesApi api = new ServicesApi();
             List<Service> services = api.getServices(false, "");
 
