@@ -301,10 +301,7 @@ namespace planningIX
             service.tags.RemoveAll(tag => tag == null);
             foreach (string tag in service.tags)
             {
-                if (tag.Contains("_"))
-                {
-                    tag.Replace("_", " ");
-                }
+                TagCleaner.cleanTag(tag);
             }
 
 

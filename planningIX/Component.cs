@@ -153,7 +153,7 @@ namespace planningIX
             resource.alias = alias;
             resource.description = descriptionOfVersions;
             resource.release = release;
-            //resource.tags.Add(domain);
+            resource.tags.Add(domain);
             resource.tags.Add(StandardisationTag);
             resource.tags.Add(DecisionStatusTag);
 
@@ -161,10 +161,7 @@ namespace planningIX
             resource.tags.RemoveAll(tag => tag == null);
             foreach (string tag in resource.tags)
             {
-                if (tag.Contains("_"))
-                {
-                    tag.Replace("_", " ");
-                }
+                TagCleaner.cleanTag(tag);
             }
 
 
