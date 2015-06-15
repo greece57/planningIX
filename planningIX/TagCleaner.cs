@@ -19,7 +19,6 @@ namespace planningIX
                 {
                     tag = tag.Replace(c, Char.Parse(" "));
                 }
-
             }
             return tag;
         }

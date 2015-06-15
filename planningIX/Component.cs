@@ -159,11 +159,11 @@ namespace planningIX
 
             // Remove wrong tags
             resource.tags.RemoveAll(tag => tag == null);
-            foreach (string tag in resource.tags)
-            {
-                TagCleaner.cleanTag(tag);
-            }
 
+            for (int i = 0; i < resource.tags.Count; i++)
+            {
+                resource.tags[i] = TagCleaner.cleanTag(resource.tags[i]);
+            }
 
             return resource;
         }

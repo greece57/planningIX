@@ -299,9 +299,11 @@ namespace planningIX
 
             // Remove wrong tags
             service.tags.RemoveAll(tag => tag == null);
-            foreach (string tag in service.tags)
+            service.tags.ForEach(tag => TagCleaner.cleanTag(tag));
+
+            for (int i = 0; i < service.tags.Count; i++)
             {
-                TagCleaner.cleanTag(tag);
+                service.tags[i] = TagCleaner.cleanTag(service.tags[i]);
             }
 
 
