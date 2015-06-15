@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace planningIX
 {
-    class Component
+    class Component : hasUniqueName
     {
         public string ID;
-        public string currentVersionName;
         public string Name
         {
             get
@@ -23,21 +22,12 @@ namespace planningIX
             set
             { name = value; }
         }
-        public string Description
-        {
-            get
-            {
-                if (description == null) return description;
-                string _description = description;
-                _description = _description.Replace("<", " ");
-                _description = _description.Replace(">", " ");
-                return _description;
-            }
-            set { description = value; }
-        }
         public List<string> currentVersions;
         public string state;
         public string alias;
+        public string domain;
+        public string standardTechnology;
+        public string decisionStatus;
         public string itServiceCenter;
         public string itProductGroup;
         public string productSpecialist;
@@ -45,7 +35,6 @@ namespace planningIX
         public DateTime endDate;
 
         private string name;
-        private string description;
 
 
         public string responsible
@@ -81,24 +70,16 @@ namespace planningIX
                 return _release;
             }
         }
-        public string descriptionWithVersions
+        public string descriptionOfVersions
         {
             get
             {
-                // There is only 1 current Version and the number is already in Release
-                if (currentVersions.Count <= 1 && !String.IsNullOrEmpty(release))
+                string newDescription = "Versions:";
+                foreach (string currentVersion in currentVersions)
                 {
-                    return description;
+                    newDescription += Environment.NewLine + currentVersion;
                 }
-                else // store the versions in the description
-                {
-                    string newDescription = description + Environment.NewLine + "Versions:";
-                    foreach (string currentVersion in currentVersions)
-                    {
-                        newDescription += Environment.NewLine + currentVersion;
-                    }
-                    return newDescription;
-                }
+                return newDescription;
             }
         }
         public string startDateString

@@ -36,8 +36,11 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.tb_ITComplienceReport = new System.Windows.Forms.TextBox();
             this.test = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.tb_ComponentVersions = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -56,8 +59,8 @@
             this.tb_ApplicationsVersions.Name = "tb_ApplicationsVersions";
             this.tb_ApplicationsVersions.Size = new System.Drawing.Size(771, 22);
             this.tb_ApplicationsVersions.TabIndex = 0;
-            this.tb_ApplicationsVersions.Text = "C:\\Users\\Niko\\Downloads\\EA_Output\\EA_Output\\Application___Application_Version (1)" +
-    ".xlsx";
+            this.tb_ApplicationsVersions.Text = "C:\\Users\\tzioras\\Downloads\\EA_Output\\EA_Output\\Application___Application_Version " +
+    "(1).xlsx";
             // 
             // start
             // 
@@ -103,7 +106,7 @@
             this.tb_ITComplienceReport.Name = "tb_ITComplienceReport";
             this.tb_ITComplienceReport.Size = new System.Drawing.Size(771, 22);
             this.tb_ITComplienceReport.TabIndex = 0;
-            this.tb_ITComplienceReport.Text = "C:\\Users\\Niko\\Downloads\\EA_Output\\EA_Output\\IT_Compliance_Report.xlsx";
+            this.tb_ITComplienceReport.Text = "C:\\Users\\tzioras\\Downloads\\EA_Output\\EA_Output\\IT_Compliance_Report.xlsx";
             // 
             // test
             // 
@@ -115,11 +118,31 @@
             this.test.UseVisualStyleBackColor = true;
             this.test.Click += new System.EventHandler(this.test_Click);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.tb_ComponentVersions);
+            this.groupBox3.Location = new System.Drawing.Point(12, 142);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(783, 59);
+            this.groupBox3.TabIndex = 2;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Component Versions";
+            // 
+            // tb_ComponentVersions
+            // 
+            this.tb_ComponentVersions.Location = new System.Drawing.Point(6, 21);
+            this.tb_ComponentVersions.Name = "tb_ComponentVersions";
+            this.tb_ComponentVersions.Size = new System.Drawing.Size(771, 22);
+            this.tb_ComponentVersions.TabIndex = 0;
+            this.tb_ComponentVersions.Text = "C:\\Users\\tzioras\\Downloads\\EA_Output\\EA_Output\\Component___Component_Version.xlsx" +
+    "";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(807, 722);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.test);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.deleteApplications);
@@ -132,6 +155,8 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -146,6 +171,8 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox tb_ITComplienceReport;
         private System.Windows.Forms.Button test;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.TextBox tb_ComponentVersions;
     }
 }
 

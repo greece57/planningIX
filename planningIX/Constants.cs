@@ -37,5 +37,16 @@ namespace planningIX
             }
         }
 
+        public partial class ComponentsFile
+        {
+            public const string WORKSHEET_NAME = "Export";
+            public const int FIRST_ROW = 3;
+            public enum Columns : int
+            {
+                nr = 1, name, domain, standardTechnology, decisionStatus, state, itServiceCenter,
+                alias, itProductGroup, productSpecialist, startDate, endDate
+            }
+        }
+
     }
 }

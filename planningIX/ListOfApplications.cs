@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace planningIX
 {
-    class ListOfApplications: List<Application>
+    class ListOfNamedObjects<T>: List<hasUniqueName>
     {
         public object this[string name]
         {
             get 
             {
-                return Array.Find<Application>(this.ToArray(), app => (app.Name == name));
+                return Array.Find<hasUniqueName>(this.ToArray(), data => (data.Name == name));
             }
         }
+    }
 
-        public Application getByCurrentVersionName(string currentVersionName)
-        {
-            return Array.Find<Application>(this.ToArray(), app => (app.currentVersionName == currentVersionName));
-        }
+    interface hasUniqueName
+    {
+        string Name { get; set; }
     }
 }

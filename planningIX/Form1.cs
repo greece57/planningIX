@@ -36,6 +36,7 @@ namespace planningIX
             // init Excel
             oExcel = new Excel.Application();
 
+            importComponents();
             importApplications();
             importComplience();
 
@@ -48,6 +49,141 @@ namespace planningIX
         private void deleteApplications_Click(object sender, EventArgs e)
         {
             deleteAllServices();
+        }
+
+        private void importComponents()
+        {
+            Excel.Workbook applicationsWB = oExcel.Workbooks.Open(tb_ComponentVersions.Text);
+            Excel.Worksheet applicationsWS = applicationsWB.Worksheets[Constants.ComponentsFile.WORKSHEET_NAME];
+
+            Component lastComponent = null;
+            int index = 0;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            for (int row = Constants.ComponentsFile.FIRST_ROW; row < 2000; row++)
+            {
+                Excel.Range nameCell = applicationsWS.Cells[row, Constants.ComponentsFile.Columns.name];
+                Excel.Range nrCell = applicationsWS.Cells[row, Constants.ComponentsFile.Columns.nr];
+                if (String.IsNullOrEmpty(nameCell.Value))
+                {
+                    row = 2000;
+                    // exit for when name is empty
+                }
+                else if (String.IsNullOrEmpty(nrCell.Value))
+                {
+                    // add new version when nr is empty
+                    string currentVersionName = nameCell.Value;
+                    lastComponent.currentVersions.Add(currentVersionName);
+
+                    DateTime startDate = applicationsWS.Cells[row, Constants.ComponentsFile.Columns.startDate].Value ?? new DateTime(0);
+                    DateTime endDate = applicationsWS.Cells[row, Constants.ComponentsFile.Columns.endDate].Value ?? new DateTime(0);
+
+                    // set biggest & smallest StartDate
+                    if (lastComponent.startDate > startDate || lastComponent.startDate.Equals(new DateTime())) lastComponent.startDate = startDate;
+                    if (lastComponent.endDate < endDate || lastComponent.endDate.Equals(new DateTime())) lastComponent.endDate = endDate;
+                }
+                else
+                {
+                    // import new Application
+                    Component comp = new Component();
+                    comp.Name = nameCell.Value;
+                    comp.state = applicationsWS.Cells[row, Constants.ComponentsFile.Columns.state].Value;
+                    comp.alias = applicationsWS.Cells[row, Constants.ComponentsFile.Columns.alias].Value;
+                    comp.itServiceCenter = applicationsWS.Cells[row, Constants.ComponentsFile.Columns.itServiceCenter].Value;
+                    comp.itProductGroup = applicationsWS.Cells[row, Constants.ComponentsFile.Columns.itProductGroup].Value;
+                    comp.productSpecialist = applicationsWS.Cells[row, Constants.ComponentsFile.Columns.productSpecialist].Value;
+                    comp.domain = applicationsWS.Cells[row, Constants.ComponentsFile.Columns.domain].Value;
+                    comp.standardTechnology = applicationsWS.Cells[row, Constants.ComponentsFile.Columns.standardTechnology].Value;
+                    comp.decisionStatus = applicationsWS.Cells[row, Constants.ComponentsFile.Columns.decisionStatus].Value;
+
+                    // just for progress
+                    if (!(lastComponent == null))
+                    {
+                        index++;
+                        resultRTB.Text += index.ToString() + ": " + lastComponent.ToString() + Environment.NewLine;
+                        resultRTB.SelectionStart = resultRTB.Text.Length;
+                        resultRTB.ScrollToCaret();
+                    }
+                    this.Update();
+
+                    lastComponent = comp;
+                    importedData.componentList.Add(comp);
+                }
+            }
+
+            sw.Stop();
+
+            resultRTB.Text += Environment.NewLine + "Time needed to import Components: " + sw.Elapsed.Hours.ToString() + "h " +
+                sw.Elapsed.Minutes.ToString() + "m " + sw.Elapsed.Seconds.ToString() + "s";
+
+
+            applicationsWB.Close(false);
+        }
+
+        private void importApplications()
+        {
+            Excel.Workbook applicationsWB = oExcel.Workbooks.Open(tb_ApplicationsVersions.Text);
+            Excel.Worksheet applicationsWS = applicationsWB.Worksheets[Constants.ApplicationsFile.WORKSHEET_NAME];
+
+            Application lastApp = null;
+            int index = 0;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            for (int row = Constants.ApplicationsFile.FIRST_ROW; row < 2000; row++)
+            {
+                Excel.Range nameCell = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.name];
+                Excel.Range nrCell = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.nr];
+                if (String.IsNullOrEmpty(nameCell.Value))
+                {
+                    // exit for when name is empty
+                    row = 2000;
+                }
+                else if (String.IsNullOrEmpty(nrCell.Value))
+                {
+                    // add new version when nr is empty
+                    string currentVersionName = nameCell.Value;
+                    lastApp.currentVersions.Add(currentVersionName);
+                }
+                else
+                {
+                    // import new Application
+                    Application app = new Application();
+                    app.Name = nameCell.Value;
+                    app.state = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.state].Value;
+                    app.alias = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.alias].Value;
+                    app.itServiceCenter = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.itServiceCenter].Value;
+                    app.itProductGroup = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.itProductGroup].Value;
+                    app.productSpecialist = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.productSpecialist].Value;
+                    app.startDate = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.startDate].Value;
+                    app.endDate = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.endDate].Value;
+                    app.itProductCategory = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.itProductCategory].Value;
+                    app.usage = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.usage].Value;
+                    app.standardisation = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.standardisation].Value;
+                    app.Description = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.description].Value;
+
+                    // just for progress
+                    if (!(lastApp == null))
+                    {
+                        index++;
+                        resultRTB.Text += index.ToString() + ": " + lastApp.ToString() + Environment.NewLine;
+                        resultRTB.SelectionStart = resultRTB.Text.Length;
+                        resultRTB.ScrollToCaret();
+                    }
+                    this.Update();
+
+                    lastApp = app;
+                    importedData.applicationList.Add(app);
+                }
+            }
+
+            sw.Stop();
+
+            resultRTB.Text += Environment.NewLine + "Time needed to import Applications: " + sw.Elapsed.Hours.ToString() + "h " +
+                sw.Elapsed.Minutes.ToString() + "m " + sw.Elapsed.Seconds.ToString() + "s";
+
+
+            applicationsWB.Close(false);
+
         }
 
         private void importComplience()
@@ -98,76 +234,6 @@ namespace planningIX
             complienceWB.Close(false);
         }
 
-        private void importApplications()
-        {
-            Excel.Workbook applicationsWB = oExcel.Workbooks.Open(tb_ApplicationsVersions.Text);
-            Excel.Worksheet applicationsWS = applicationsWB.Worksheets[Constants.ApplicationsFile.WORKSHEET_NAME];
-
-            Application lastApp = null;
-            int index = 0;
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            for (int row = Constants.ApplicationsFile.FIRST_ROW; row < 2000; row++)
-            {
-                Excel.Range nameCell = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.name];
-                Excel.Range nrCell = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.nr];
-                if (String.IsNullOrEmpty(nameCell.Value))
-                {
-                    // exit for when name is empty
-                    row = 2000;
-                }
-                else if (String.IsNullOrEmpty(nrCell.Value))
-                {
-                    // add new version when nr is empty
-                    string currentVersionName = nameCell.Value;
-                    lastApp.currentVersions.Add(currentVersionName);
-                    if (String.IsNullOrEmpty(lastApp.currentVersionName))
-                    {
-                        lastApp.currentVersionName = currentVersionName;
-                    }
-                }
-                else
-                {
-                    // import new Application
-                    Application app = new Application();
-                    app.Name = nameCell.Value;
-                    app.state = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.state].Value;
-                    app.alias = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.alias].Value;
-                    app.itServiceCenter = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.itServiceCenter].Value;
-                    app.itProductGroup = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.itProductGroup].Value;
-                    app.productSpecialist = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.productSpecialist].Value;
-                    app.startDate = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.startDate].Value;
-                    app.endDate = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.endDate].Value;
-                    app.itProductCategory = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.itProductCategory].Value;
-                    app.usage = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.usage].Value;
-                    app.standardisation = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.standardisation].Value;
-                    app.Description = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.description].Value;
-
-                    // just for progress
-                    if (!(lastApp == null))
-                    {
-                        index++;
-                        resultRTB.Text += index.ToString() + ": " + lastApp.ToString() + Environment.NewLine;
-                        resultRTB.SelectionStart = resultRTB.Text.Length;
-                        resultRTB.ScrollToCaret();
-                    }
-                    this.Update();
-
-                    lastApp = app;
-                    importedData.applicationList.Add(app);
-                }
-            }
-
-            sw.Stop();
-
-            resultRTB.Text += Environment.NewLine + "Time needed to import Applications: " + sw.Elapsed.Hours.ToString() + "h " +
-                sw.Elapsed.Minutes.ToString() + "m " + sw.Elapsed.Seconds.ToString() + "s";
-
-
-            applicationsWB.Close(false);
-
-        }
-
         private void importData()
         {
 
@@ -215,7 +281,7 @@ namespace planningIX
 
         }
 
-        private void AddServices(List<Application> applications)
+        private void AddServices(ListOfNamedObjects<Application> applications)
         {
             ServicesApi sApi = new ServicesApi();
             FactSheetApi fsApi = new FactSheetApi();

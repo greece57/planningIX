@@ -7,10 +7,9 @@ using LeanIX.Api.Models;
 
 namespace planningIX
 {
-    class Application
+    class Application : hasUniqueName
     {
         public string ID;
-        public string currentVersionName;
         public string Name
         {
             get
