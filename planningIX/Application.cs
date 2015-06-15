@@ -277,7 +277,7 @@ namespace planningIX
 
         public override string ToString()
         {
-            return ("Name: " + Name + " Release: " + release + " Alias: " + alias);
+            return ("Application {Name: " + Name + " Release: " + release + " Alias: " + alias + "}");
         }
 
         public Service getService()
