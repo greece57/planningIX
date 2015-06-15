@@ -38,6 +38,7 @@
             this.test = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tb_ComponentVersions = new System.Windows.Forms.TextBox();
+            this.deleteComponents = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -82,9 +83,9 @@
             // 
             // deleteApplications
             // 
-            this.deleteApplications.Location = new System.Drawing.Point(630, 651);
+            this.deleteApplications.Location = new System.Drawing.Point(624, 605);
             this.deleteApplications.Name = "deleteApplications";
-            this.deleteApplications.Size = new System.Drawing.Size(171, 58);
+            this.deleteApplications.Size = new System.Drawing.Size(171, 48);
             this.deleteApplications.TabIndex = 3;
             this.deleteApplications.Text = "Delete all Applications";
             this.deleteApplications.UseVisualStyleBackColor = true;
@@ -137,11 +138,22 @@
             this.tb_ComponentVersions.Text = "C:\\Users\\tzioras\\Downloads\\EA_Output\\EA_Output\\Component___Component_Version.xlsx" +
     "";
             // 
+            // deleteComponents
+            // 
+            this.deleteComponents.Location = new System.Drawing.Point(624, 659);
+            this.deleteComponents.Name = "deleteComponents";
+            this.deleteComponents.Size = new System.Drawing.Size(171, 48);
+            this.deleteComponents.TabIndex = 5;
+            this.deleteComponents.Text = "Delete all Components";
+            this.deleteComponents.UseVisualStyleBackColor = true;
+            this.deleteComponents.Click += new System.EventHandler(this.deleteComponents_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(807, 722);
+            this.Controls.Add(this.deleteComponents);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.test);
             this.Controls.Add(this.groupBox2);
@@ -173,6 +185,7 @@
         private System.Windows.Forms.Button test;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox tb_ComponentVersions;
+        private System.Windows.Forms.Button deleteComponents;
     }
 }
 

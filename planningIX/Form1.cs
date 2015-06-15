@@ -287,7 +287,11 @@ namespace planningIX
             ServicesApi sApi = new ServicesApi();
             FactSheetApi fsApi = new FactSheetApi();
 
-            int index = 1;
+            // Keep Progress
+            Progress prog = new Progress();
+            prog.current = 1;
+            prog.max = applications.Count;
+
             foreach (Application app in applications)
             {
                 Service service = app.getService();
@@ -302,11 +306,11 @@ namespace planningIX
 
                 if (!(service == null))
                 {
-                    resultRTB.Text += index.ToString() + ": " + service.name + Environment.NewLine;
+                    resultRTB.Text += prog.current.ToString() + ": " + service.name + " (" + prog.ToString() + ") " + Environment.NewLine;
                     resultRTB.SelectionStart = resultRTB.Text.Length;
                     resultRTB.ScrollToCaret();
                 }
-                index++;
+                prog.current++;
             }
         }
 
@@ -315,7 +319,11 @@ namespace planningIX
             ResourcesApi rApi = new ResourcesApi();
             FactSheetApi fsApi = new FactSheetApi();
 
-            int index = 1;
+            // Keep Progress
+            Progress prog = new Progress();
+            prog.current = 1;
+            prog.max = components.Count;
+
             foreach (Component comp in components)
             {
                 Resource resource = comp.getResource();
@@ -330,11 +338,11 @@ namespace planningIX
 
                 if (!(resource == null))
                 {
-                    resultRTB.Text += index.ToString() + ": " + resource.name + Environment.NewLine;
+                    resultRTB.Text += prog.current.ToString() + ": " + resource.name + " (" + prog.ToString() + ") " + Environment.NewLine;
                     resultRTB.SelectionStart = resultRTB.Text.Length;
                     resultRTB.ScrollToCaret();
                 }
-                index++;
+                prog.current++;
             }
         }
 
@@ -374,6 +382,42 @@ namespace planningIX
         {
             Application app = createTestApplication();
             AddOneService(app);
+        }
+
+        private void deleteComponents_Click(object sender, EventArgs e)
+        {
+            deleteAllResources();
+        }
+
+        private void deleteAllResources()
+        {
+            ResourcesApi api = new ResourcesApi();
+            List<Resource> resources = api.getResources(false, "");
+
+            // Keep Progress
+            Progress prog = new Progress();
+            prog.current = 1;
+            prog.max = resources.Count;
+
+            // Stop time
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            foreach (Resource resource in resources)
+            {
+                api.deleteResource(resource.ID);
+                resultRTB.Text += "Deleted Service \"" + resource.name + "\" (" + prog.ToString() + ")" + Environment.NewLine;
+                resultRTB.SelectionStart = resultRTB.Text.Length;
+                resultRTB.ScrollToCaret();
+                prog.current++;
+            }
+
+
+            sw.Stop();
+
+            resultRTB.Text += Environment.NewLine + "Time needed to delete " + prog.max + " Applications: " + sw.Elapsed.Hours.ToString() + "h " +
+                sw.Elapsed.Minutes.ToString() + "m " + sw.Elapsed.Seconds.ToString() + "s";
+
         }
     }
 }
