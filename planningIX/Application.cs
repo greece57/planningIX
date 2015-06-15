@@ -10,7 +10,32 @@ namespace planningIX
     class Application
     {
         public string ID;
-        private string _name;
+        public string currentVersionName;
+        public string Name
+        {
+            get
+            {
+                if (name == null) return null;
+                string _name = name;
+                _name = _name.Replace("<", "");
+                _name = _name.Replace(">", "");
+                return _name;
+            }
+            set
+            { name = value; }
+        }
+        public string Description
+        {
+            get
+            {
+                if (description == null) return description;
+                string _description = description;
+                _description = _description.Replace("<", " ");
+                _description = _description.Replace(">", " ");
+                return _description;
+            }
+            set { description = value; }
+        }
         public List<string> currentVersions;
         public string state;
         public string alias;
@@ -22,30 +47,153 @@ namespace planningIX
         public string itProductCategory;
         public string usage;
         public string standardisation;
-        private string _description;
+        public string businessContact;
+        public string applicationType;
+        public string CS_Relevance
+        {
+            get
+            {
+                if (cs_Relevance == null)
+                {
+                    return cs_Relevance;
+                }
+                else if (cs_Relevance.Equals("yes"))
+                {
+                    return "CS Relevant";
+                }
+                else if (cs_Relevance.Equals("no"))
+                {
+                    return "not CS Relevant";
+                }
+                else
+                {
+                    return cs_Relevance;
+                }
+            }
+            set { cs_Relevance = value; }
+        }
+        public string DR_Class
+        {
+            get
+            {
+                if (dr_class == null)
+                {
+                    return null;
+                }
+                else if (dr_class.Equals("none"))
+                    return null;
+                else
+                    return dr_class;
+            }
+            set { dr_class = value; }
+        }
+        public string ConfProd
+        {
+            get
+            {
+                if (confProd == null)
+                    return confProd;
+                else if (confProd.Contains("C0"))
+                    return "C0 prod";
+                else if (confProd.Contains("C1"))
+                    return "C1 prod";
+                else if (confProd.Contains("C2"))
+                    return "C2 prod";
+                else if (confProd.Contains("C3"))
+                    return "C3 prod";
+                else if (confProd.Contains("C4"))
+                    return "C4 prod";
+                else
+                    return null;
+            }
+            set { confProd = value; }
+        }
+        public string ConfInt
+        {
+            get
+            {
+                if (confInt == null)
+                    return confInt;
+                else if (confInt.Contains("C0"))
+                    return "C0 int";
+                else if (confInt.Contains("C1"))
+                    return "C1 int";
+                else if (confInt.Contains("C2"))
+                    return "C2 int";
+                else if (confInt.Contains("C3"))
+                    return "C3 int";
+                else if (confInt.Contains("C4"))
+                    return "C4 int";
+                else
+                    return null;
+            }
+            set { confInt = value; }
+        }
+        public string ConfDev
+        {
+            get
+            {
+                if (confDev == null)
+                    return confDev;
+                else if (confDev.Contains("C0"))
+                    return "C0 dev";
+                else if (confDev.Contains("C1"))
+                    return "C1 dev";
+                else if (confDev.Contains("C2"))
+                    return "C2 dev";
+                else if (confDev.Contains("C3"))
+                    return "C3 dev";
+                else if (confDev.Contains("C4"))
+                    return "C4 dev";
+                else
+                    return null;
+            }
+            set { confDev = value; }
+        }
+        public string Integrity
+        {
+            get
+            {
+                if (integrity == null)
+                    return integrity;
+                else if (integrity.Contains("I1"))
+                    return "I1";
+                else if (integrity.Contains("I2"))
+                    return "I2";
+                else if (integrity.Contains("I3"))
+                    return "I3";
+                else if (integrity.Contains("I4"))
+                    return "I4";
+                else
+                    return null;
+            }
+            set { integrity = value; }
+        }
+        public string Availability
+        {
+            get
+            {
+                if (availability == null)
+                    return availability;
+                else if (availability.Contains("A1"))
+                    return "A1";
+                else if (availability.Contains("A2"))
+                    return "A2";
+                else if (availability.Contains("A3"))
+                    return "A3";
+                else if (availability.Contains("A4"))
+                    return "A4";
+                else
+                    return null;
+            }
+            set { availability = value; }
+        }
 
-        public string description
-        {
-            get
-            {
-                string __description = _description;
-                __description = __description.Replace("<", " ");
-                __description = __description.Replace(">", " ");
-                return __description;
-            }
-            set { _description = value; }
-        }
-        public string name
-        {
-            get
-            {
-                string __name = _name;
-                __name = __name.Replace("<", "");
-                __name = __name.Replace(">", "");
-                return __name;
-            }
-            set { _name = value; }
-        }
+        public int nrOfLegalEntities;
+        public int nrOfBusinessProcesses;
+        public int nrOfInterfaces;
+
+        
         public string responsible {
             get
             {
@@ -68,9 +216,9 @@ namespace planningIX
                 string _release = "";
                 foreach (string version in currentVersions)
                 {
-                    if (version.Contains(name))
+                    if (version.Contains(Name))
                     {
-                        _release = version.Replace(name, "").Trim();
+                        _release = version.Replace(Name, "").Trim();
                     }
                 }
                 _release = _release.Replace("<", "");
@@ -112,6 +260,16 @@ namespace planningIX
             }
         }
 
+        private string name;
+        private string description;
+        private string cs_Relevance;
+        private string dr_class;
+        private string confProd;
+        private string confInt;
+        private string confDev;
+        private string integrity;
+        private string availability;
+
         public Application()
         {
             currentVersions = new List<string>();
@@ -119,18 +277,37 @@ namespace planningIX
 
         public override string ToString()
         {
-            return ("Name: " + name + " Release: " + release + " Alias: " + alias);
+            return ("Name: " + Name + " Release: " + release + " Alias: " + alias);
         }
 
         public Service getService()
         {
             Service service = new Service();
-            service.name = name;
+            service.name = Name;
             service.alias = alias;
             service.description = descriptionWithVersions;
             service.release = release;
             service.tags.Add(usage);
             service.tags.Add(standardisation);
+            service.tags.Add(applicationType);
+            service.tags.Add(CS_Relevance);
+            service.tags.Add(DR_Class);
+            service.tags.Add(ConfProd);
+            service.tags.Add(ConfDev);
+            service.tags.Add(ConfInt);
+            service.tags.Add(Integrity);
+            service.tags.Add(Availability);
+
+            // Remove wrong tags
+            service.tags.RemoveAll(tag => tag == null);
+            foreach (string tag in service.tags)
+            {
+                if (tag.Contains("_"))
+                {
+                    tag.Replace("_", " ");
+                }
+            }
+
 
             return service;
         }

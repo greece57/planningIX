@@ -19,6 +19,7 @@ namespace planningIX
     public partial class Form1 : Form
     {
         ImportedData importedData = new ImportedData();
+        Excel.Application oExcel;
 
         public Form1()
         {
@@ -32,7 +33,15 @@ namespace planningIX
 
         private void start_Click(object sender, EventArgs e)
         {
+            // init Excel
+            oExcel = new Excel.Application();
+
             importApplications();
+            importComplience();
+
+            oExcel.Visible = true;
+            oExcel.Quit();
+
             importData();
         }
 
@@ -41,9 +50,56 @@ namespace planningIX
             deleteAllServices();
         }
 
+        private void importComplience()
+        {
+            Excel.Workbook complienceWB = oExcel.Workbooks.Open(tb_ITComplienceReport.Text);
+            Excel.Worksheet complienceWS = complienceWB.Worksheets[Constants.ComplienceReportFile.WORKSHEET_NAME];
+
+            int index = 0;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            for (int row = Constants.ComplienceReportFile.FIRST_ROW; row < 2000; row++)
+            {
+                Excel.Range nameCell = complienceWS.Cells[row, Constants.ComplienceReportFile.Columns.name];
+                if (String.IsNullOrEmpty(nameCell.Value))
+                {
+                    row = 2000;
+                }
+                else
+                {
+                    Application app = importedData.applicationList[nameCell.Value];
+                    if (!(app == null))
+                    {
+                        app.businessContact = complienceWS.Cells[row, Constants.ComplienceReportFile.Columns.businessContact].Value;
+                        app.applicationType = complienceWS.Cells[row, Constants.ComplienceReportFile.Columns.applicationType].Value;
+                        app.CS_Relevance = complienceWS.Cells[row, Constants.ComplienceReportFile.Columns.csRelevance].Value;
+                        app.DR_Class = complienceWS.Cells[row, Constants.ComplienceReportFile.Columns.drClass].Value;
+                        app.ConfProd = complienceWS.Cells[row, Constants.ComplienceReportFile.Columns.confProd].Value;
+                        app.ConfInt = complienceWS.Cells[row, Constants.ComplienceReportFile.Columns.confInt].Value;
+                        app.ConfDev = complienceWS.Cells[row, Constants.ComplienceReportFile.Columns.confDev].Value;
+                        app.Integrity = complienceWS.Cells[row, Constants.ComplienceReportFile.Columns.integrity].Value;
+                        app.Availability = complienceWS.Cells[row, Constants.ComplienceReportFile.Columns.availability].Value;
+                        app.nrOfLegalEntities = int.Parse(complienceWS.Cells[row, Constants.ComplienceReportFile.Columns.nrOfLegalEntities].Value);
+                        app.nrOfBusinessProcesses = int.Parse(complienceWS.Cells[row, Constants.ComplienceReportFile.Columns.nrOfBusinessProcesses].Value);
+                        app.nrOfInterfaces = int.Parse(complienceWS.Cells[row, Constants.ComplienceReportFile.Columns.nrOfInterfaces].Value);
+                        
+                        // just for progress
+                        index++;
+                        resultRTB.Text += index.ToString() + ". Update: " + app.Name + Environment.NewLine;
+                        resultRTB.SelectionStart = resultRTB.Text.Length;
+                        resultRTB.ScrollToCaret();
+                    
+                        this.Update();
+
+                    }
+                }
+            }
+
+            complienceWB.Close(false);
+        }
+
         private void importApplications()
         {
-            Excel.Application oExcel = new Excel.Application();
             Excel.Workbook applicationsWB = oExcel.Workbooks.Open(tb_ApplicationsVersions.Text);
             Excel.Worksheet applicationsWS = applicationsWB.Worksheets[Constants.ApplicationsFile.WORKSHEET_NAME];
 
@@ -63,14 +119,18 @@ namespace planningIX
                 else if (String.IsNullOrEmpty(nrCell.Value))
                 {
                     // add new version when nr is empty
-                    string newName = nameCell.Value;
-                    lastApp.currentVersions.Add(newName);
+                    string currentVersionName = nameCell.Value;
+                    lastApp.currentVersions.Add(currentVersionName);
+                    if (String.IsNullOrEmpty(lastApp.currentVersionName))
+                    {
+                        lastApp.currentVersionName = currentVersionName;
+                    }
                 }
                 else
                 {
                     // import new Application
                     Application app = new Application();
-                    app.name = nameCell.Value;
+                    app.Name = nameCell.Value;
                     app.state = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.state].Value;
                     app.alias = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.alias].Value;
                     app.itServiceCenter = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.itServiceCenter].Value;
@@ -81,7 +141,7 @@ namespace planningIX
                     app.itProductCategory = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.itProductCategory].Value;
                     app.usage = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.usage].Value;
                     app.standardisation = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.standardisation].Value;
-                    app.description = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.description].Value;
+                    app.Description = applicationsWS.Cells[row, Constants.ApplicationsFile.Columns.description].Value;
 
                     // just for progress
                     if (!(lastApp == null))
@@ -103,12 +163,8 @@ namespace planningIX
             resultRTB.Text += Environment.NewLine + "Time needed to import Applications: " + sw.Elapsed.Hours.ToString() + "h " +
                 sw.Elapsed.Minutes.ToString() + "m " + sw.Elapsed.Seconds.ToString() + "s";
 
-            //foreach (Application app in importedData.applicationList)
-            //{
-            //    resultRTB.Text += app.ToString();
-            //}
 
-            oExcel.Visible = true;
+            applicationsWB.Close(false);
 
         }
 
@@ -119,8 +175,6 @@ namespace planningIX
             resultRTB.Text += Environment.NewLine + Environment.NewLine + "Started Importing Services..." + Environment.NewLine;
             sw.Start();
 
-            Application app = createTestApplication();
-            //AddOneService(app);
             AddServices(importedData.applicationList);
 
             sw.Stop();
@@ -131,14 +185,16 @@ namespace planningIX
         private Application createTestApplication()
         {
             Application app = new Application();
-            app.name = "TestAppName";
+            app.Name = "TestAppName";
             app.alias = "TestAlias";
-            app.description = "TestDescription";
+            app.Description = "TestDescription";
             app.currentVersions.Add("TestAppName 1.0");
             app.currentVersions.Add("TestAppName 2.0");
             app.startDate = new DateTime(2007,12,11);
             app.endDate = new DateTime(2010, 1, 1);
             app.usage = "Local";
+            app.ConfInt = "C3 - Confidential (INT)";
+            app.Availability = "A1 - Low Availabilty";
             return app;
         }
 
@@ -217,6 +273,12 @@ namespace planningIX
                 sw.Elapsed.Minutes.ToString() + "m " + sw.Elapsed.Seconds.ToString() + "s";
 
 
+        }
+
+        private void test_Click(object sender, EventArgs e)
+        {
+            Application app = createTestApplication();
+            AddOneService(app);
         }
     }
 }
