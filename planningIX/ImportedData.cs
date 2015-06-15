@@ -8,13 +8,13 @@ namespace planningIX
 {
     class ImportedData
     {
-        public ListOfNamedObjects<Application> applicationList;
-        public ListOfNamedObjects<Component> componentList;
+        public ListOfFactSheets<Application> applicationList;
+        public ListOfFactSheets<Component> componentList;
 
         public ImportedData()
         {
-            applicationList = new ListOfNamedObjects<Application>();
-            componentList = new ListOfNamedObjects<Component>();
+            applicationList = new ListOfFactSheets<Application>();
+            componentList = new ListOfFactSheets<Component>();
         }
     }
 }

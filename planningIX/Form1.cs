@@ -242,6 +242,7 @@ namespace planningIX
             sw.Start();
 
             AddServices(importedData.applicationList);
+            AddComponents(importedData.componentList);
 
             sw.Stop();
             resultRTB.Text += Environment.NewLine + "Time needed to import to LeanIX: " + sw.Elapsed.Hours.ToString() + "h " +
@@ -281,7 +282,7 @@ namespace planningIX
 
         }
 
-        private void AddServices(ListOfNamedObjects<Application> applications)
+        private void AddServices(ListOfFactSheets<Application> applications)
         {
             ServicesApi sApi = new ServicesApi();
             FactSheetApi fsApi = new FactSheetApi();
@@ -302,6 +303,34 @@ namespace planningIX
                 if (!(service == null))
                 {
                     resultRTB.Text += index.ToString() + ": " + service.name + Environment.NewLine;
+                    resultRTB.SelectionStart = resultRTB.Text.Length;
+                    resultRTB.ScrollToCaret();
+                }
+                index++;
+            }
+        }
+
+        private void AddComponents(ListOfFactSheets<Component> components)
+        {
+            ResourcesApi rApi = new ResourcesApi();
+            FactSheetApi fsApi = new FactSheetApi();
+
+            int index = 1;
+            foreach (Component comp in components)
+            {
+                Resource resource = comp.getResource();
+
+                resource = rApi.createResource(resource);
+                comp.ID = resource.ID;
+
+                // Add Lifecycles
+                comp.addComponentLifecycleToService(resource);
+                fsApi.createFactSheetHasLifecycles(resource.ID, resource);
+
+
+                if (!(resource == null))
+                {
+                    resultRTB.Text += index.ToString() + ": " + resource.name + Environment.NewLine;
                     resultRTB.SelectionStart = resultRTB.Text.Length;
                     resultRTB.ScrollToCaret();
                 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace planningIX
 {
-    class ListOfNamedObjects<T>: List<hasUniqueName>
+    class ListOfFactSheets<T>: List<hasUniqueName>
     {
         public object this[string name]
         {
