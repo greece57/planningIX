@@ -14,6 +14,18 @@ namespace planningIX
             public const string API_KEY = "2754f33e5300cf58c9fb2bb0362b4b35";
         }
 
+        public partial class ComplienceReportFile
+        {
+            public const string WORKSHEET_NAME = "Export";
+            public const int FIRST_ROW = 4;
+            public enum Columns : int
+            {
+                nr = 1, name, description, itServiceCenter, itProductGroup, productSpecialist,
+                businessContact, applicationType, state, csRelevance, drClass, confProd, confInt,
+                confDev, integrity, availability, nrOfLegalEntities, nrOfBusinessProcesses, nrOfInterfaces
+            }
+        }
+
         public partial class ApplicationsFile
         {
             public const string WORKSHEET_NAME = "Export";

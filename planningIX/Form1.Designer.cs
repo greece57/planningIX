@@ -33,7 +33,11 @@
             this.start = new System.Windows.Forms.Button();
             this.resultRTB = new System.Windows.Forms.RichTextBox();
             this.deleteApplications = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.tb_ITComplienceReport = new System.Windows.Forms.TextBox();
+            this.test = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -52,10 +56,12 @@
             this.tb_ApplicationsVersions.Name = "tb_ApplicationsVersions";
             this.tb_ApplicationsVersions.Size = new System.Drawing.Size(771, 22);
             this.tb_ApplicationsVersions.TabIndex = 0;
+            this.tb_ApplicationsVersions.Text = "C:\\Users\\Niko\\Downloads\\EA_Output\\EA_Output\\Application___Application_Version (1)" +
+    ".xlsx";
             // 
             // start
             // 
-            this.start.Location = new System.Drawing.Point(229, 375);
+            this.start.Location = new System.Drawing.Point(235, 605);
             this.start.Name = "start";
             this.start.Size = new System.Drawing.Size(171, 104);
             this.start.TabIndex = 1;
@@ -65,7 +71,7 @@
             // 
             // resultRTB
             // 
-            this.resultRTB.Location = new System.Drawing.Point(18, 77);
+            this.resultRTB.Location = new System.Drawing.Point(24, 307);
             this.resultRTB.Name = "resultRTB";
             this.resultRTB.Size = new System.Drawing.Size(771, 292);
             this.resultRTB.TabIndex = 2;
@@ -73,7 +79,7 @@
             // 
             // deleteApplications
             // 
-            this.deleteApplications.Location = new System.Drawing.Point(624, 421);
+            this.deleteApplications.Location = new System.Drawing.Point(630, 651);
             this.deleteApplications.Name = "deleteApplications";
             this.deleteApplications.Size = new System.Drawing.Size(171, 58);
             this.deleteApplications.TabIndex = 3;
@@ -81,11 +87,41 @@
             this.deleteApplications.UseVisualStyleBackColor = true;
             this.deleteApplications.Click += new System.EventHandler(this.deleteApplications_Click);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.tb_ITComplienceReport);
+            this.groupBox2.Location = new System.Drawing.Point(12, 77);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(783, 59);
+            this.groupBox2.TabIndex = 1;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "IT Complience Report";
+            // 
+            // tb_ITComplienceReport
+            // 
+            this.tb_ITComplienceReport.Location = new System.Drawing.Point(6, 21);
+            this.tb_ITComplienceReport.Name = "tb_ITComplienceReport";
+            this.tb_ITComplienceReport.Size = new System.Drawing.Size(771, 22);
+            this.tb_ITComplienceReport.TabIndex = 0;
+            this.tb_ITComplienceReport.Text = "C:\\Users\\Niko\\Downloads\\EA_Output\\EA_Output\\IT_Compliance_Report.xlsx";
+            // 
+            // test
+            // 
+            this.test.Location = new System.Drawing.Point(18, 605);
+            this.test.Name = "test";
+            this.test.Size = new System.Drawing.Size(171, 104);
+            this.test.TabIndex = 4;
+            this.test.Text = "Test Import";
+            this.test.UseVisualStyleBackColor = true;
+            this.test.Click += new System.EventHandler(this.test_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(807, 507);
+            this.ClientSize = new System.Drawing.Size(807, 722);
+            this.Controls.Add(this.test);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.deleteApplications);
             this.Controls.Add(this.resultRTB);
             this.Controls.Add(this.start);
@@ -94,6 +130,8 @@
             this.Text = "Form1";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -105,6 +143,9 @@
         private System.Windows.Forms.Button start;
         private System.Windows.Forms.RichTextBox resultRTB;
         private System.Windows.Forms.Button deleteApplications;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TextBox tb_ITComplienceReport;
+        private System.Windows.Forms.Button test;
     }
 }
 
