@@ -37,6 +37,18 @@ namespace planningIX
             }
         }
 
+        public partial class InterfacesFile
+        {
+            public const string WORKSHEET_NAME = "Export";
+            public const int FIRST_ROW = 4;
+            public enum Columns : int
+            {
+                nr = 1, from, typeFrom, itServiceCenterFrom, productSpecialistFrom, to, typeTo, itServiceCenterTo, productSpecialistTo,
+                state, start, end, description, connectionType, connectionMethod, connectionFrequency, connectionDataFormat,
+                personalData, transferredBusinessObjects
+            }
+        }
+
         public partial class ComponentsFile
         {
             public const string WORKSHEET_NAME = "Export";

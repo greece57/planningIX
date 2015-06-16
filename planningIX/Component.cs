@@ -7,7 +7,7 @@ using LeanIX.Api.Models;
 
 namespace planningIX
 {
-    class Component : hasUniqueName
+    class Component : hasUniqueNameAndCurrentVersions
     {
         public string ID;
         public string Name
@@ -23,7 +23,7 @@ namespace planningIX
             set
             { name = value; }
         }
-        public List<string> currentVersions;
+        public List<string> currentVersions {get; private set;}
         public string state;
         public string alias;
         public string domain;

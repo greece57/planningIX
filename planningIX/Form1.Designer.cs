@@ -39,9 +39,12 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tb_ComponentVersions = new System.Windows.Forms.TextBox();
             this.deleteComponents = new System.Windows.Forms.Button();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.tb_applicationInterfaces = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -60,8 +63,8 @@
             this.tb_ApplicationsVersions.Name = "tb_ApplicationsVersions";
             this.tb_ApplicationsVersions.Size = new System.Drawing.Size(771, 22);
             this.tb_ApplicationsVersions.TabIndex = 0;
-            this.tb_ApplicationsVersions.Text = "C:\\Users\\tzioras\\Downloads\\EA_Output\\EA_Output\\Application___Application_Version " +
-    "(1).xlsx";
+            this.tb_ApplicationsVersions.Text = "C:\\Users\\Niko\\Downloads\\EA_Output\\EA_Output\\Application___Application_Version (1)" +
+    ".xlsx";
             // 
             // start
             // 
@@ -107,7 +110,7 @@
             this.tb_ITComplienceReport.Name = "tb_ITComplienceReport";
             this.tb_ITComplienceReport.Size = new System.Drawing.Size(771, 22);
             this.tb_ITComplienceReport.TabIndex = 0;
-            this.tb_ITComplienceReport.Text = "C:\\Users\\tzioras\\Downloads\\EA_Output\\EA_Output\\IT_Compliance_Report.xlsx";
+            this.tb_ITComplienceReport.Text = "C:\\Users\\Niko\\Downloads\\EA_Output\\EA_Output\\IT_Compliance_Report.xlsx";
             // 
             // test
             // 
@@ -122,7 +125,7 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.tb_ComponentVersions);
-            this.groupBox3.Location = new System.Drawing.Point(12, 142);
+            this.groupBox3.Location = new System.Drawing.Point(12, 207);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(783, 59);
             this.groupBox3.TabIndex = 2;
@@ -135,8 +138,7 @@
             this.tb_ComponentVersions.Name = "tb_ComponentVersions";
             this.tb_ComponentVersions.Size = new System.Drawing.Size(771, 22);
             this.tb_ComponentVersions.TabIndex = 0;
-            this.tb_ComponentVersions.Text = "C:\\Users\\tzioras\\Downloads\\EA_Output\\EA_Output\\Component___Component_Version.xlsx" +
-    "";
+            this.tb_ComponentVersions.Text = "C:\\Users\\Niko\\Downloads\\EA_Output\\EA_Output\\Component___Component_Version.xlsx";
             // 
             // deleteComponents
             // 
@@ -148,11 +150,30 @@
             this.deleteComponents.UseVisualStyleBackColor = true;
             this.deleteComponents.Click += new System.EventHandler(this.deleteComponents_Click);
             // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.tb_applicationInterfaces);
+            this.groupBox4.Location = new System.Drawing.Point(12, 142);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(783, 59);
+            this.groupBox4.TabIndex = 3;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Application Interfaces";
+            // 
+            // tb_applicationInterfaces
+            // 
+            this.tb_applicationInterfaces.Location = new System.Drawing.Point(6, 21);
+            this.tb_applicationInterfaces.Name = "tb_applicationInterfaces";
+            this.tb_applicationInterfaces.Size = new System.Drawing.Size(771, 22);
+            this.tb_applicationInterfaces.TabIndex = 0;
+            this.tb_applicationInterfaces.Text = "C:\\Users\\Niko\\Downloads\\EA_Output\\EA_Output\\Information_Flows.xlsx";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(807, 722);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.deleteComponents);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.test);
@@ -169,6 +190,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -186,6 +209,8 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox tb_ComponentVersions;
         private System.Windows.Forms.Button deleteComponents;
+        private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.TextBox tb_applicationInterfaces;
     }
 }
 

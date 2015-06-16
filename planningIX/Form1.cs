@@ -36,14 +36,75 @@ namespace planningIX
             // init Excel
             oExcel = new Excel.Application();
 
-            importComponents();
             importApplications();
-            importComplience();
+            //importComplience();
+            importInterfaces();
+            //importComponents();
 
             oExcel.Visible = true;
             oExcel.Quit();
 
             importData();
+        }
+
+        private void importInterfaces()
+        {
+            Excel.Workbook interfacesWB = oExcel.Workbooks.Open(tb_applicationInterfaces.Text);
+            Excel.Worksheet interfacesWS = interfacesWB.Worksheets[Constants.ComponentsFile.WORKSHEET_NAME];
+            
+
+            int index = 0;
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            for (int row = Constants.InterfacesFile.FIRST_ROW; row < 2000; row++)
+            {
+                Excel.Range fromCell = interfacesWS.Cells[row, Constants.InterfacesFile.Columns.from];
+                if (String.IsNullOrEmpty(fromCell.Value))
+                {
+                    row = 2000;
+                    // exit for when name is empty
+                }
+                
+                else
+                {
+                    // import new Application
+                    Interface intface = new Interface();
+                    intface.from = fromCell.Value;
+                    intface.to = interfacesWS.Cells[row, Constants.InterfacesFile.Columns.to].Value;
+                    intface.state = interfacesWS.Cells[row, Constants.InterfacesFile.Columns.state].Value;
+                    intface.startDate = interfacesWS.Cells[row, Constants.InterfacesFile.Columns.start].Value;
+                    intface.endDate = interfacesWS.Cells[row, Constants.InterfacesFile.Columns.end].Value;
+                    intface.description = interfacesWS.Cells[row, Constants.InterfacesFile.Columns.description].Value;
+                    intface.connectionType = interfacesWS.Cells[row, Constants.InterfacesFile.Columns.connectionType].Value;
+                    intface.connectionMethod = interfacesWS.Cells[row, Constants.InterfacesFile.Columns.connectionMethod].Value;
+                    intface.connectionFrequency = interfacesWS.Cells[row, Constants.InterfacesFile.Columns.connectionFrequency].Value;
+                    intface.dataFormat = interfacesWS.Cells[row, Constants.InterfacesFile.Columns.connectionDataFormat].Value;
+                    intface.personalData = interfacesWS.Cells[row, Constants.InterfacesFile.Columns.personalData].Value;
+                    intface.transferredBuisnessObjects = interfacesWS.Cells[row, Constants.InterfacesFile.Columns.transferredBusinessObjects].Value;
+
+                    Application fromApp = importedData.applicationList.getByCurrentVersion(intface.from);
+                    Application toApp = importedData.applicationList.getByCurrentVersion(intface.to);
+
+                    if (fromApp == null || toApp == null)
+                    {
+                        resultRTB.Text += "Minderwertig: " + intface.from + " or " + intface.to + Environment.NewLine;
+                    }
+                    else
+                    {
+                        fromApp.interfaces.Add(intface);
+                        intface.toApp = toApp;
+                    }
+
+                    // just for progress
+                    index++;
+                    resultRTB.Text += index.ToString() + ": " + intface.ToString() + Environment.NewLine;
+                    resultRTB.SelectionStart = resultRTB.Text.Length;
+                    resultRTB.ScrollToCaret();
+                    this.Update();
+
+                }
+            }
+
         }
 
         private void deleteApplications_Click(object sender, EventArgs e)
@@ -241,12 +302,26 @@ namespace planningIX
             resultRTB.Text += Environment.NewLine + Environment.NewLine + "Started Importing Services..." + Environment.NewLine;
             sw.Start();
 
-            AddServices(importedData.applicationList);
+            //AddServices(importedData.applicationList);
+            MatchServices();
+            AddInterfaces(importedData.applicationList);
             AddComponents(importedData.componentList);
 
             sw.Stop();
             resultRTB.Text += Environment.NewLine + "Time needed to import to LeanIX: " + sw.Elapsed.Hours.ToString() + "h " +
             sw.Elapsed.Minutes.ToString() + "m " + sw.Elapsed.Seconds.ToString() + "s";
+        }
+
+        private void MatchServices()
+        {
+            ServicesApi sApi = new ServicesApi();
+
+            List<Service> serviceList = sApi.getServices(false, "");
+
+            foreach (Service service in serviceList)
+            {
+                ((Application)importedData.applicationList[service.name]).ID = service.ID;
+            }
         }
 
         private Application createTestApplication()
@@ -280,6 +355,47 @@ namespace planningIX
 
             fsApi.createFactSheetHasLifecycles(service.ID, service);
 
+        }
+
+        private void AddInterfaces(ListOfFactSheets<Application> applications)
+        {
+            ServicesApi sApi = new ServicesApi();
+
+            // Keep Progress
+            Progress prog = new Progress();
+            prog.current = 1;
+            prog.max = applications.Count;
+
+            foreach (Application app in applications)
+            {
+
+                foreach (Interface intface in app.interfaces)
+                {
+                    ServiceHasInterface serviceInterface = new ServiceHasInterface();
+                    serviceInterface.name = intface.Description;
+                    serviceInterface.serviceID = app.ID;
+                    serviceInterface.serviceRefID = intface.toApp.ID;
+                    if (!(String.IsNullOrEmpty(serviceInterface.serviceID) || String.IsNullOrEmpty(serviceInterface.serviceRefID)
+                        || serviceInterface.serviceID == serviceInterface.serviceRefID))
+                    {
+                        serviceInterface.interfaceDirectionID = "2";
+                        serviceInterface.interfaceFrequencyID = intface.Frequency;
+                        serviceInterface.interfaceTypeID = intface.InterfaceType;
+                        serviceInterface.visibilityID = intface.State;
+
+                        serviceInterface = sApi.createServiceHasInterface(app.ID, serviceInterface);
+                    }
+                }
+
+
+                if (!(app == null))
+                {
+                    resultRTB.Text += prog.current.ToString() + ": " + app.Name + " -> " + app.interfaces.Count.ToString() + " (" + prog.ToString() + ") " + Environment.NewLine;
+                    resultRTB.SelectionStart = resultRTB.Text.Length;
+                    resultRTB.ScrollToCaret();
+                }
+                prog.current++;
+            }
         }
 
         private void AddServices(ListOfFactSheets<Application> applications)

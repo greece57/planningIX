@@ -72,6 +72,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="ImportedData.cs" />
+    <Compile Include="Interface.cs" />
     <Compile Include="ListOfApplications.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Progress.cs" />
@@ -151,7 +152,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\leanix-sdk-csharp\src\LeanIX\LeanIX.Api.csproj">
+    <ProjectReference Include="..\..\..\..\..\Source\Repos\leanix-sdk-csharp\src\LeanIX\LeanIX.Api.csproj">
       <Project>{ca7e17e2-95da-4a32-98c5-b345915baf71}</Project>
       <Name>LeanIX.Api</Name>
     </ProjectReference>

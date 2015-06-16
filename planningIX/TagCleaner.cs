@@ -8,7 +8,7 @@ namespace planningIX
 {
     class TagCleaner
     {
-        public const string ALLOWED_TAG_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/-&.: ";
+        public const string ALLOWED_TAG_CHARACTERS = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ/-&.: ";
 
         public static string cleanTag(string tag)
         {
@@ -20,7 +20,7 @@ namespace planningIX
                     tag = tag.Replace(c, Char.Parse(" "));
                 }
             }
-            return tag;
+            return tag.Trim();
         }
     }
 }

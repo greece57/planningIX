@@ -7,7 +7,7 @@ using LeanIX.Api.Models;
 
 namespace planningIX
 {
-    class Application : hasUniqueName
+    class Application : hasUniqueNameAndCurrentVersions
     {
         public string ID;
         public string Name
@@ -35,7 +35,10 @@ namespace planningIX
             }
             set { description = value; }
         }
-        public List<string> currentVersions;
+
+        public List<Interface> interfaces;
+
+        public List<string> currentVersions { get; private set; }
         public string state;
         public string alias;
         public string itServiceCenter;
@@ -231,7 +234,7 @@ namespace planningIX
                 // There is only 1 current Version and the number is already in Release
                 if (currentVersions.Count <= 1 && !String.IsNullOrEmpty(release))
                 {
-                    return description;
+                    return description.Replace("<", "").Replace(">", "");
                 }
                 else // store the versions in the description
                 {
@@ -240,7 +243,7 @@ namespace planningIX
                     {
                         newDescription += Environment.NewLine + currentVersion;
                     }
-                    return newDescription;
+                    return newDescription.Replace("<", "").Replace(">", "");
                 }
             }
         }
@@ -272,6 +275,7 @@ namespace planningIX
         public Application()
         {
             currentVersions = new List<string>();
+            interfaces = new List<Interface>();
         }
 
         public override string ToString()
