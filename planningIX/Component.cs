@@ -10,6 +10,7 @@ namespace planningIX
     class Component : hasUniqueNameAndCurrentVersions
     {
         public string ID;
+        public string baseName;
         public string Name
         {
             get
@@ -142,6 +143,21 @@ namespace planningIX
         {
             currentVersions = new List<string>();
             applicationList = new List<Application>();
+        }
+
+        public Component(Component baseComponent)
+        {
+            currentVersions = new List<string>();
+            applicationList = new List<Application>();
+
+            baseName = baseComponent.baseName;
+            state = baseComponent.state;
+            alias = baseComponent.alias;
+            itServiceCenter = baseComponent.itServiceCenter;
+            itProductGroup = baseComponent.itProductGroup;
+            domain = baseComponent.domain;
+            standardTechnology = baseComponent.standardTechnology;
+            decisionStatus = baseComponent.decisionStatus;
         }
 
         public override string ToString()

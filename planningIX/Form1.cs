@@ -41,7 +41,7 @@ namespace planningIX
             //importInterfaces();
             importComponents();
             importComponentApplicationMatching();
-            importBusinessSuppport();
+            //importBusinessSuppport();
 
             oExcel.Visible = true;
             oExcel.Quit();
@@ -152,7 +152,7 @@ namespace planningIX
                 else
                 {
                     // find component
-                    currentComponent = (Component)importedData.componentList.getByCurrentVersion(componentName.Value);
+                    currentComponent = (Component)importedData.componentList[componentName.Value];
                     
                     // just for progress
                     index++;
@@ -237,7 +237,7 @@ namespace planningIX
             Excel.Worksheet applicationsWS = applicationsWB.Worksheets[Constants.ComponentsFile.WORKSHEET_NAME];
             Excel.Range usedRange = applicationsWS.UsedRange;
 
-            Component lastComponent = null;
+            Component baseComponent = null;
             int index = 0;
             Stopwatch sw = new Stopwatch();
             sw.Start();
@@ -254,20 +254,33 @@ namespace planningIX
                 {
                     // add new version when nr is empty
                     string currentVersionName = nameCell.Value;
-                    lastComponent.currentVersions.Add(currentVersionName);
 
                     DateTime startDate = usedRange[row, Constants.ComponentsFile.Columns.startDate].Value ?? new DateTime(0);
                     DateTime endDate = usedRange[row, Constants.ComponentsFile.Columns.endDate].Value ?? new DateTime(0);
 
-                    // set biggest & smallest StartDate
-                    if (lastComponent.startDate > startDate || lastComponent.startDate.Equals(new DateTime())) lastComponent.startDate = startDate;
-                    if (lastComponent.endDate < endDate || lastComponent.endDate.Equals(new DateTime())) lastComponent.endDate = endDate;
+                    Component comp = new Component(baseComponent);
+                    comp.Name = currentVersionName;
+                    comp.startDate = startDate;
+                    comp.endDate = endDate;
+
+                    // just for progress
+                    if (!(baseComponent == null))
+                    {
+                        index++;
+                        resultRTB.Text += index.ToString() + ": " + baseComponent.ToString() + Environment.NewLine;
+                        resultRTB.SelectionStart = resultRTB.Text.Length;
+                        resultRTB.ScrollToCaret();
+                    }
+                    this.Update();
+
+                    importedData.componentList.Add(comp);
+
                 }
                 else
                 {
                     // import new Component
                     Component comp = new Component();
-                    comp.Name = nameCell.Value;
+                    comp.baseName = nameCell.Value;
                     comp.state = usedRange[row, Constants.ComponentsFile.Columns.state].Value;
                     comp.alias = usedRange[row, Constants.ComponentsFile.Columns.alias].Value;
                     comp.itServiceCenter = usedRange[row, Constants.ComponentsFile.Columns.itServiceCenter].Value;
@@ -277,18 +290,8 @@ namespace planningIX
                     comp.standardTechnology = usedRange[row, Constants.ComponentsFile.Columns.standardTechnology].Value;
                     comp.decisionStatus = usedRange[row, Constants.ComponentsFile.Columns.decisionStatus].Value;
 
-                    // just for progress
-                    if (!(lastComponent == null))
-                    {
-                        index++;
-                        resultRTB.Text += index.ToString() + ": " + lastComponent.ToString() + Environment.NewLine;
-                        resultRTB.SelectionStart = resultRTB.Text.Length;
-                        resultRTB.ScrollToCaret();
-                    }
-                    this.Update();
 
-                    lastComponent = comp;
-                    importedData.componentList.Add(comp);
+                    baseComponent = comp;
                 }
             }
 
@@ -426,10 +429,10 @@ namespace planningIX
             //AddServices(importedData.applicationList);
             MatchServices();
             //AddInterfaces(importedData.applicationList);
-            //AddComponents(importedData.componentList);
-            MatchComponents();
+            AddComponents(importedData.componentList);
+            //MatchComponents();
             AddServicesToComponents();
-            ImportBusinessCapability();
+            //ImportBusinessCapability();
 
             sw.Stop();
             resultRTB.Text += Environment.NewLine + "Time needed to import to LeanIX: " + sw.Elapsed.Hours.ToString() + "h " +

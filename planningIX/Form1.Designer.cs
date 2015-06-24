@@ -145,7 +145,8 @@
             this.tb_ComponentVersions.Name = "tb_ComponentVersions";
             this.tb_ComponentVersions.Size = new System.Drawing.Size(771, 22);
             this.tb_ComponentVersions.TabIndex = 0;
-            this.tb_ComponentVersions.Text = "C:\\Users\\Niko\\Downloads\\EA_Output\\EA_Output\\Component___Component_Version.xlsx";
+            this.tb_ComponentVersions.Text = "C:\\Users\\Niko\\Downloads\\EA_Output\\EA_Output\\Component___Component_Version (1).xls" +
+    "x";
             // 
             // deleteComponents
             // 
