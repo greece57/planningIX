@@ -44,6 +44,7 @@ namespace planningIX
         public string itServiceCenter;
         public string itProductGroup;
         public string productSpecialist;
+        public string productSpecialistEmail;
         public DateTime startDate;
         public DateTime endDate;
         public string itProductCategory;

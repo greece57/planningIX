@@ -35,6 +35,8 @@ namespace planningIX
         public DateTime startDate;
         public DateTime endDate;
 
+        public List<Application> applicationList;
+
         private string name;
 
 
@@ -139,6 +141,7 @@ namespace planningIX
         public Component()
         {
             currentVersions = new List<string>();
+            applicationList = new List<Application>();
         }
 
         public override string ToString()

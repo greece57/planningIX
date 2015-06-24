@@ -60,5 +60,27 @@ namespace planningIX
             }
         }
 
+        public partial class ComponentsUsageFile
+        {
+            public const string WORKSHEET_NAME = "Export";
+            public const int FIRST_ROW = 3;
+            public enum Columns : int
+            {
+                nr = 1, id, componentVersion, itServiceCenter, componentVersionStartDate, componentVersionEndDate,
+                componentVersionState, compLifecycleState, usedInVersion, usedInName, usedItServiceCenter, usedItProductGroup,
+                usedProductSpecialist, usedProductSpecialistEmail, usedStartDate, usedEndDate, usedVersionState, usedLifecycleState
+            }
+        }
+
+        public partial class BusinessSupportFile
+        {
+            public const string WORKSHEET_NAME = "Export";
+            public const int FIRST_ROW = 3;
+            public enum Columns : int
+            {
+                nr = 1, businessProcessLvl1 = 8, applicationName = 12
+            }
+        }
+
     }
 }
