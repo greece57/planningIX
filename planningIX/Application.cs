@@ -7,10 +7,9 @@ using LeanIX.Api.Models;
 
 namespace planningIX
 {
-    class Application
+    class Application : hasUniqueNameAndCurrentVersions
     {
         public string ID;
-        public string currentVersionName;
         public string Name
         {
             get
@@ -36,12 +35,16 @@ namespace planningIX
             }
             set { description = value; }
         }
-        public List<string> currentVersions;
+
+        public List<Interface> interfaces;
+
+        public List<string> currentVersions { get; private set; }
         public string state;
         public string alias;
         public string itServiceCenter;
         public string itProductGroup;
         public string productSpecialist;
+        public string productSpecialistEmail;
         public DateTime startDate;
         public DateTime endDate;
         public string itProductCategory;
@@ -232,7 +235,7 @@ namespace planningIX
                 // There is only 1 current Version and the number is already in Release
                 if (currentVersions.Count <= 1 && !String.IsNullOrEmpty(release))
                 {
-                    return description;
+                    return description.Replace("<", "").Replace(">", "");
                 }
                 else // store the versions in the description
                 {
@@ -241,7 +244,7 @@ namespace planningIX
                     {
                         newDescription += Environment.NewLine + currentVersion;
                     }
-                    return newDescription;
+                    return newDescription.Replace("<", "").Replace(">", "");
                 }
             }
         }
@@ -273,11 +276,12 @@ namespace planningIX
         public Application()
         {
             currentVersions = new List<string>();
+            interfaces = new List<Interface>();
         }
 
         public override string ToString()
         {
-            return ("Name: " + Name + " Release: " + release + " Alias: " + alias);
+            return ("Application {Name: " + Name + " Release: " + release + " Alias: " + alias + "}");
         }
 
         public Service getService()
@@ -300,12 +304,11 @@ namespace planningIX
 
             // Remove wrong tags
             service.tags.RemoveAll(tag => tag == null);
-            foreach (string tag in service.tags)
+            service.tags.ForEach(tag => TagCleaner.cleanTag(tag));
+
+            for (int i = 0; i < service.tags.Count; i++)
             {
-                if (tag.Contains("_"))
-                {
-                    tag.Replace("_", " ");
-                }
+                service.tags[i] = TagCleaner.cleanTag(service.tags[i]);
             }
 
 

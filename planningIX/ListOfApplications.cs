@@ -6,19 +6,30 @@ using System.Threading.Tasks;
 
 namespace planningIX
 {
-    class ListOfApplications: List<Application>
+    class ListOfFactSheets<T>: List<hasUniqueNameAndCurrentVersions>
     {
         public object this[string name]
         {
             get 
             {
-                return Array.Find<Application>(this.ToArray(), app => (app.Name == name));
+                return Array.Find<hasUniqueNameAndCurrentVersions>(this.ToArray(), data => (data.Name == name));
             }
         }
 
-        public Application getByCurrentVersionName(string currentVersionName)
+        internal T getByCurrentVersion(string currentVersion)
         {
-            return Array.Find<Application>(this.ToArray(), app => (app.currentVersionName == currentVersionName));
+            foreach (hasUniqueNameAndCurrentVersions factSheet in this)
+            {
+                if (factSheet.currentVersions.Contains(currentVersion))
+                    return (T)factSheet;
+            }
+            return default(T);
         }
+    }
+
+    interface hasUniqueNameAndCurrentVersions
+    {
+        string Name { get; set; }
+        List<string> currentVersions { get; }
     }
 }
