@@ -46,6 +46,8 @@
             this.DeleteComponentConnections = new System.Windows.Forms.Button();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.tb_businessSupport = new System.Windows.Forms.TextBox();
+            this.deleteBusinessCapabilities = new System.Windows.Forms.Button();
+            this.DeleteUserGroups = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -75,7 +77,7 @@
             // 
             // start
             // 
-            this.start.Location = new System.Drawing.Point(235, 605);
+            this.start.Location = new System.Drawing.Point(24, 603);
             this.start.Name = "start";
             this.start.Size = new System.Drawing.Size(171, 104);
             this.start.TabIndex = 1;
@@ -121,9 +123,9 @@
             // 
             // test
             // 
-            this.test.Location = new System.Drawing.Point(18, 605);
+            this.test.Location = new System.Drawing.Point(214, 605);
             this.test.Name = "test";
-            this.test.Size = new System.Drawing.Size(171, 104);
+            this.test.Size = new System.Drawing.Size(64, 48);
             this.test.TabIndex = 4;
             this.test.Text = "Test Import";
             this.test.UseVisualStyleBackColor = true;
@@ -220,13 +222,36 @@
             this.tb_businessSupport.Name = "tb_businessSupport";
             this.tb_businessSupport.Size = new System.Drawing.Size(771, 22);
             this.tb_businessSupport.TabIndex = 0;
-            this.tb_businessSupport.Text = "C:\\Users\\Niko\\Downloads\\EA_Output\\EA_Output\\Operational_Business_Support.xlsx";
+            this.tb_businessSupport.Text = "C:\\Users\\Niko\\Downloads\\EA_Output\\EA_Output\\New_Mapping_Capabilities_to_Operation" +
+    "al_Business_Support (1).xlsx";
+            // 
+            // deleteBusinessCapabilities
+            // 
+            this.deleteBusinessCapabilities.Location = new System.Drawing.Point(447, 605);
+            this.deleteBusinessCapabilities.Name = "deleteBusinessCapabilities";
+            this.deleteBusinessCapabilities.Size = new System.Drawing.Size(171, 48);
+            this.deleteBusinessCapabilities.TabIndex = 7;
+            this.deleteBusinessCapabilities.Text = "Delete all Business Capabilitys";
+            this.deleteBusinessCapabilities.UseVisualStyleBackColor = true;
+            this.deleteBusinessCapabilities.Click += new System.EventHandler(this.deleteBusinessCapabilities_Click);
+            // 
+            // DeleteUserGroups
+            // 
+            this.DeleteUserGroups.Location = new System.Drawing.Point(270, 659);
+            this.DeleteUserGroups.Name = "DeleteUserGroups";
+            this.DeleteUserGroups.Size = new System.Drawing.Size(171, 48);
+            this.DeleteUserGroups.TabIndex = 8;
+            this.DeleteUserGroups.Text = "Delete all User Groups";
+            this.DeleteUserGroups.UseVisualStyleBackColor = true;
+            this.DeleteUserGroups.Click += new System.EventHandler(this.DeleteUserGroups_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(807, 722);
+            this.Controls.Add(this.DeleteUserGroups);
+            this.Controls.Add(this.deleteBusinessCapabilities);
             this.Controls.Add(this.groupBox6);
             this.Controls.Add(this.DeleteComponentConnections);
             this.Controls.Add(this.groupBox5);
@@ -277,6 +302,8 @@
         private System.Windows.Forms.Button DeleteComponentConnections;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.TextBox tb_businessSupport;
+        private System.Windows.Forms.Button deleteBusinessCapabilities;
+        private System.Windows.Forms.Button DeleteUserGroups;
     }
 }
 

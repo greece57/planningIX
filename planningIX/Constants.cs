@@ -78,7 +78,10 @@ namespace planningIX
             public const int FIRST_ROW = 3;
             public enum Columns : int
             {
-                nr = 1, businessProcessLvl1 = 8, applicationName = 12
+                nr = 1, bSStartDate, bSEndDate, bSState, bSBusinessSegment, serviceOrganisation, organisation, businessCapability, 
+                businessProcessLvl1, buisnessProcessLvl3ShortName, businessProcessLvl3, applicationName, applicationBaseName,
+                applicationShortName, applicationVersionStartDate, applicationVersionEndDate, ApplicationVersionState, Standartisation,
+                itProductCategory, usage, appVersionBusinessSegment
             }
         }
 

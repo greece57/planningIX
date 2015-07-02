@@ -75,6 +75,7 @@
     <Compile Include="ImportedData.cs" />
     <Compile Include="Interface.cs" />
     <Compile Include="ListOfApplications.cs" />
+    <Compile Include="Organisation.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Progress.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

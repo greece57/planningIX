@@ -170,7 +170,7 @@ namespace planningIX
             Resource resource = new Resource();
             resource.name = Name;
             resource.alias = alias;
-            resource.description = descriptionOfVersions;
+            resource.description = "";
             resource.release = release;
             resource.tags.Add(domain);
             resource.tags.Add(StandardisationTag);

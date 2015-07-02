@@ -39,9 +39,9 @@ namespace planningIX
             importApplications();
             //importComplience();
             //importInterfaces();
-            importComponents();
-            importComponentApplicationMatching();
-            //importBusinessSuppport();
+            //importComponents();
+            //importComponentApplicationMatching();
+            importBusinessSuppport();
 
             oExcel.Visible = true;
             oExcel.Quit();
@@ -57,6 +57,7 @@ namespace planningIX
 
 
             int index = 0;
+            Organisation currentOrganisation = null;
             BusinessProcessLvl1 currentBusinessProcess = null;
             Application currentApplication = null;
             Stopwatch sw = new Stopwatch();
@@ -64,28 +65,33 @@ namespace planningIX
             for (int row = Constants.BusinessSupportFile.FIRST_ROW; row < 7000; row++)
             {
                 string nr = usedRange[row, Constants.BusinessSupportFile.Columns.nr].Value;
-                string businessProcessName = usedRange[row, Constants.BusinessSupportFile.Columns.businessProcessLvl1].Value;
+                string organisationName = usedRange[row, Constants.BusinessSupportFile.Columns.organisation].Value;
+                string businessProcessName = usedRange[row, Constants.BusinessSupportFile.Columns.businessCapability].Value;
                 string applicationName = usedRange[row, Constants.BusinessSupportFile.Columns.applicationName].Value;
                 if (String.IsNullOrEmpty(nr))
                 {
                     //exit because finished
                     row = 7000;
                 }
-                else if (String.IsNullOrEmpty(businessProcessName))
-                {
-                    // do nothing
-                }else if (String.IsNullOrEmpty(applicationName))
+                else if (String.IsNullOrEmpty(businessProcessName) || String.IsNullOrEmpty(applicationName) || String.IsNullOrEmpty(organisationName))
                 {
                     // do nothing
                 }
                 else
                 {
                     currentBusinessProcess = (BusinessProcessLvl1)importedData.lvl1BusinessProcessList[businessProcessName];
+                    currentOrganisation = (Organisation)importedData.organisationList[organisationName];
+                    currentApplication = (Application)importedData.applicationList.getByCurrentVersion(applicationName);
+
+                    // Business Process
                     if (currentBusinessProcess == null)
                     {
                         BusinessProcessLvl1 newProcess = new BusinessProcessLvl1();
                         newProcess.name = businessProcessName;
-                        currentApplication = (Application)importedData.applicationList[applicationName];
+                        newProcess.startDate = usedRange[row, Constants.BusinessSupportFile.Columns.bSStartDate].Value;
+                        newProcess.endDate = usedRange[row, Constants.BusinessSupportFile.Columns.bSEndDate].Value;
+
+                        currentApplication = (Application)importedData.applicationList.getByCurrentVersion(applicationName);
                         if (currentApplication != null) newProcess.applicationList.Add(currentApplication);
                         importedData.lvl1BusinessProcessList.Add(newProcess);
                         currentBusinessProcess = newProcess;
@@ -96,17 +102,34 @@ namespace planningIX
                         {
                             // do nothing - same row!
                         }
-                        else if (currentApplication.Name.Equals(applicationName))
+                        else
                         {
-                            // do nothing
+                            if (!currentBusinessProcess.applicationList.Contains(currentApplication))
+                                currentBusinessProcess.applicationList.Add(currentApplication);
+                        }
+                    }
+                    
+                    if (currentOrganisation == null)
+                    {
+                        Organisation  newOrg = new Organisation();
+                        newOrg.Name = organisationName;
+                        currentApplication = (Application)importedData.applicationList.getByCurrentVersion(applicationName);
+                        if (currentApplication != null) newOrg.applicationList.Add(currentApplication);
+                        importedData.organisationList.Add(newOrg);
+                        currentOrganisation = newOrg;
+                    }
+                    else
+                    {
+                        if (currentApplication == null)
+                        {
+                            // do nothing - same row!
                         }
                         else
                         {
-                            currentApplication = (Application)importedData.applicationList[applicationName];
-                            if (currentApplication != null)  currentBusinessProcess.applicationList.Add(currentApplication);
+                            if (!currentOrganisation.applicationList.Contains(currentApplication))
+                                currentOrganisation.applicationList.Add(currentApplication);
                         }
                     }
-
 
                     // just for progress
                     index++;
@@ -429,19 +452,52 @@ namespace planningIX
             //AddServices(importedData.applicationList);
             MatchServices();
             //AddInterfaces(importedData.applicationList);
-            AddComponents(importedData.componentList);
+            //AddComponents(importedData.componentList);
             //MatchComponents();
-            AddServicesToComponents();
-            //ImportBusinessCapability();
+            //AddServicesToComponents();
+            ImportBusinessCapability();
+            ImportUserGroup();
 
             sw.Stop();
             resultRTB.Text += Environment.NewLine + "Time needed to import to LeanIX: " + sw.Elapsed.Hours.ToString() + "h " +
             sw.Elapsed.Minutes.ToString() + "m " + sw.Elapsed.Seconds.ToString() + "s";
         }
 
+        private void ImportUserGroup()
+        {
+            ConsumersApi cApi = new ConsumersApi();
+
+            Progress prog = new Progress();
+            prog.current = 1;
+            prog.max = importedData.componentList.Count;
+            foreach (Organisation org in importedData.organisationList)
+            {
+                Consumer cons = new Consumer();
+                cons.serviceHasConsumers = new List<ServiceHasConsumer>();
+                cons.name = org.Name;
+
+                cons = cApi.createConsumer(cons);
+                org.ID = cons.ID;
+
+                foreach (Application app in org.applicationList)
+                {
+                    ServiceHasConsumer consumerService = new ServiceHasConsumer();
+                    consumerService.serviceID = app.ID;
+                    consumerService.consumerID = cons.ID;
+                    consumerService = cApi.createServiceHasConsumer(cons.ID, consumerService);
+                }
+                prog.current++;
+
+                resultRTB.Text += prog.current.ToString() + ": " + org.Name + " (" + prog.ToString() + ") " + Environment.NewLine;
+                resultRTB.SelectionStart = resultRTB.Text.Length;
+                resultRTB.ScrollToCaret();
+            }
+        }
+
         private void ImportBusinessCapability()
         {
             BusinessCapabilitiesApi bcApi = new BusinessCapabilitiesApi();
+            FactSheetApi fsApi = new FactSheetApi();
 
             Progress prog = new Progress();
             prog.current = 1;
@@ -451,23 +507,34 @@ namespace planningIX
                 BusinessCapability businessCapability = new BusinessCapability();
                 businessCapability.serviceHasBusinessCapabilities = new List<ServiceHasBusinessCapability>();
                 businessCapability.name = processLvl1.name;
-
+                
                 businessCapability = bcApi.createBusinessCapability(businessCapability);
-                processLvl1.ID = businessCapability.ID;
-
-                foreach (Application app in processLvl1.applicationList)
+                if (businessCapability == null)
                 {
-                    ServiceHasBusinessCapability businessCapabilityService = new ServiceHasBusinessCapability();
-                    businessCapabilityService.serviceID = app.ID;
-                    businessCapabilityService.businessCapabilityID = businessCapability.ID;
-                    businessCapabilityService.isLeading = false;
-                    businessCapabilityService = bcApi.createServiceHasBusinessCapability(businessCapability.ID, businessCapabilityService);
+                    //throw new Exception("");
                 }
-                prog.current++;
+                else
+                {
 
-                resultRTB.Text += prog.current.ToString() + ": " + processLvl1.name + " (" + prog.ToString() + ") " + Environment.NewLine;
-                resultRTB.SelectionStart = resultRTB.Text.Length;
-                resultRTB.ScrollToCaret();
+                    processLvl1.ID = businessCapability.ID;
+
+                    processLvl1.addBusinessProcessLifecycleToBusinessCapability(businessCapability);
+                    fsApi.createFactSheetHasLifecycles(businessCapability.ID, businessCapability);
+
+                    foreach (Application app in processLvl1.applicationList)
+                    {
+                        ServiceHasBusinessCapability businessCapabilityService = new ServiceHasBusinessCapability();
+                        businessCapabilityService.serviceID = app.ID;
+                        businessCapabilityService.businessCapabilityID = businessCapability.ID;
+                        businessCapabilityService.isLeading = false;
+                        businessCapabilityService = bcApi.createServiceHasBusinessCapability(businessCapability.ID, businessCapabilityService);
+                    }
+                    prog.current++;
+
+                    resultRTB.Text += prog.current.ToString() + ": " + processLvl1.name + " (" + prog.ToString() + ") " + Environment.NewLine;
+                    resultRTB.SelectionStart = resultRTB.Text.Length;
+                    resultRTB.ScrollToCaret();
+                }
             }
 
         }
@@ -781,5 +848,76 @@ namespace planningIX
 
 
         }
+
+        private void deleteBusinessCapabilities_Click(object sender, EventArgs e)
+        {
+            BusinessCapabilitiesApi api = new BusinessCapabilitiesApi();
+            List<BusinessCapability> bcs = api.getBusinessCapabilities(false, "");
+
+            // Keep Progress
+            Progress prog = new Progress();
+            prog.current = 1;
+            prog.max = bcs.Count;
+
+            // Stop time
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            foreach (BusinessCapability businessCapability in bcs)
+            {
+                if (businessCapability != null)
+                {
+                    api.deleteBusinessCapability(businessCapability.ID);
+                }
+                resultRTB.Text += "Deleted Connections from Service \"" + businessCapability.name + "\" (" + prog.ToString() + ")" + Environment.NewLine;
+                resultRTB.SelectionStart = resultRTB.Text.Length;
+                resultRTB.ScrollToCaret();
+                prog.current++;
+            }
+
+
+            sw.Stop();
+
+            resultRTB.Text += Environment.NewLine + "Time needed to delete " + prog.max + " Applications: " + sw.Elapsed.Hours.ToString() + "h " +
+                sw.Elapsed.Minutes.ToString() + "m " + sw.Elapsed.Seconds.ToString() + "s";
+
+
+        }
+
+        private void DeleteUserGroups_Click(object sender, EventArgs e)
+        {
+            ConsumersApi api = new ConsumersApi();
+            List<Consumer> cs = api.getConsumers(false, "");
+
+            // Keep Progress
+            Progress prog = new Progress();
+            prog.current = 1;
+            prog.max = cs.Count;
+
+            // Stop time
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+
+            foreach (Consumer consumer in cs)
+            {
+                if (consumer != null)
+                {
+                    api.deleteConsumer(consumer.ID);
+                }
+                resultRTB.Text += "Deleted Connections from Service \"" + consumer.name + "\" (" + prog.ToString() + ")" + Environment.NewLine;
+                resultRTB.SelectionStart = resultRTB.Text.Length;
+                resultRTB.ScrollToCaret();
+                prog.current++;
+            }
+
+
+            sw.Stop();
+
+            resultRTB.Text += Environment.NewLine + "Time needed to delete " + prog.max + " Applications: " + sw.Elapsed.Hours.ToString() + "h " +
+                sw.Elapsed.Minutes.ToString() + "m " + sw.Elapsed.Seconds.ToString() + "s";
+
+        }
+
+
     }
 }
